@@ -1,6 +1,8 @@
 {
   description = "The Tiny C compiler";
 
+  inputs.nixpkgs.url = "github:nixos/nixpkgs/nixos-21.11";
+
   outputs = { self, nixpkgs }: {
 
     packages.x86_64-linux.tinycc =
