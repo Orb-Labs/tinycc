@@ -1,5 +1,5 @@
 {
-  description = "A very basic flake";
+  description = "The Tiny C compiler";
 
   outputs = { self, nixpkgs }: {
 
