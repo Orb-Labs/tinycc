@@ -25,6 +25,10 @@
           # build cross compilers
           "--enable-cross"
         ];
+        buildPhase = ''
+          make
+          make test
+        '';
       };
 
     defaultPackage.x86_64-linux = self.packages.x86_64-linux.tinycc;
