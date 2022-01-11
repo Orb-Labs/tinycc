@@ -22,9 +22,14 @@
           "--crtprefix=${lib.getLib stdenv.cc.libc}/lib"
           "--sysincludepaths=${lib.getDev stdenv.cc.libc}/include:{B}/include"
           "--libpaths=${lib.getLib stdenv.cc.libc}/lib"
+          "--elfinterp=${stdenv.cc.outPath}/nix-support/dynamic-linker"
           # build cross compilers
           "--enable-cross"
         ];
+
+        checkPhase = ''
+          make test
+        '';
       };
 
     defaultPackage.x86_64-linux = self.packages.x86_64-linux.tinycc;
@@ -43,7 +48,8 @@
             --sysincludepaths=${devPrefix}/include:{B}/include \
             --libpaths=${prefix}/lib \
             --prefix=./local \
-            --enable-cross
+            --enable-cross \
+            --elfinterp=$(< ${stdenv.cc.outPath}/nix-support/dynamic-linker)
           echo "Welcome to TinyCC dev shell!"
         '';
       };
