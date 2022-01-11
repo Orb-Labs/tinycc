@@ -29,7 +29,9 @@
           "--enable-cross"
         ];
 
-        buildPhase = ''
+        doCheck = true;
+
+        checkPhase = ''
           make
           make test
         '';
