@@ -3,14 +3,20 @@
 
   inputs.nixpkgs.url = "github:nixos/nixpkgs/nixos-21.11";
 
-  outputs = { self, nixpkgs }: {
+  nixConfig.bash-prompt = "[tinycc] $ ";
+
+  outputs = { self, nixpkgs }:
+  let pkgs = import nixpkgs { system = "x86_64-linux"; };
+      devDeps = with pkgs; [ perl texinfo which ];
+  in
+  {
 
     packages.x86_64-linux.tinycc =
-      with import nixpkgs { system = "x86_64-linux"; };
+      with pkgs;
       stdenv.mkDerivation {
         name = "tinycc";
         src = self;
-        nativeBuildInputs = [ perl texinfo which ];
+        nativeBuildInputs = devDeps;
         configureFlags = [
           "--cc=cc"
           "--crtprefix=${lib.getLib stdenv.cc.libc}/lib"
@@ -23,5 +29,22 @@
 
     defaultPackage.x86_64-linux = self.packages.x86_64-linux.tinycc;
 
+    devShell.x86_64-linux =
+      with pkgs;
+      let prefix = lib.getLib stdenv.cc.libc;
+          devPrefix = lib.getDev stdenv.cc.libc;
+      in
+      mkShell {
+        naitveBuildInputs = devDeps;
+        shellHook = ''
+          echo "prefix is" ${prefix}
+          echo "dev prefix is" ${devPrefix}
+          ./configure --cc=cc --crtprefix=${prefix}/lib \
+            --sysincludepaths=${devPrefix}/include:{B}/include \
+            --libpaths=${prefix}/lib \
+            --enable-cross
+          echo "Welcome to TinyCC dev shell!"
+        '';
+      };
   };
 }
