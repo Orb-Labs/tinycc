@@ -35,7 +35,7 @@
           devPrefix = lib.getDev stdenv.cc.libc;
       in
       mkShell {
-        naitveBuildInputs = devDeps;
+        nativeBuildInputs = devDeps;
         shellHook = ''
           echo "prefix is" ${prefix}
           echo "dev prefix is" ${devPrefix}
