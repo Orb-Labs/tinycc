@@ -42,6 +42,7 @@
           ./configure --cc=cc --crtprefix=${prefix}/lib \
             --sysincludepaths=${devPrefix}/include:{B}/include \
             --libpaths=${prefix}/lib \
+            --prefix=./local \
             --enable-cross
           echo "Welcome to TinyCC dev shell!"
         '';
