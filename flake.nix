@@ -17,17 +17,20 @@
         name = "tinycc";
         src = self;
         nativeBuildInputs = devDeps;
+        preConfigure = ''
+          configureFlagsArray+=("--elfinterp=$(< ${stdenv.cc.outPath}/nix-support/dynamic-linker)")
+        '';
         configureFlags = [
           "--cc=cc"
           "--crtprefix=${lib.getLib stdenv.cc.libc}/lib"
           "--sysincludepaths=${lib.getDev stdenv.cc.libc}/include:{B}/include"
           "--libpaths=${lib.getLib stdenv.cc.libc}/lib"
-          "--elfinterp=${stdenv.cc.outPath}/nix-support/dynamic-linker"
           # build cross compilers
           "--enable-cross"
         ];
 
-        checkPhase = ''
+        buildPhase = ''
+          make
           make test
         '';
       };
