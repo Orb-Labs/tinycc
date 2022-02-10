@@ -1,15 +1,27 @@
 {
   description = "The Tiny C compiler";
 
-  inputs.nixpkgs.url = "github:nixos/nixpkgs/nixos-21.11";
+  inputs = {
+    nixpkgs.url = "github:nixos/nixpkgs/nixos-21.11";
+    flake-compat-ci.url = "github:hercules-ci/flake-compat-ci";
+    flake-compat = {
+      url = "github:edolstra/flake-compat";
+      flake = false;
+    };
+  };
 
   nixConfig.bash-prompt = "[tinycc] $ ";
 
-  outputs = { self, nixpkgs }:
+  outputs = { self, nixpkgs, flake-compat, flake-compat-ci}:
   let pkgs = import nixpkgs { system = "x86_64-linux"; };
       devDeps = with pkgs; [ perl texinfo which ];
   in
   {
+    #CI integration
+    ciNix = flake-compat-ci.lib.recurseIntoFlakeWith {
+      flake = self;
+      systems = [ "x86_64-linux" ];
+    };
 
     packages.x86_64-linux.tinycc =
       with pkgs;
