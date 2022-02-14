@@ -1,4 +1,4 @@
-#Tiny C Compiler
+# Tiny C Compiler
 
 [![Hercules-ci][Herc badge]][Herc link]
 [![Cachix Cache][Cachix badge]][Cachix link]
